@@ -22,6 +22,13 @@ namespace Worker
             while (!stoppingToken.IsCancellationRequested)
             {
                 _logger.LogInformation("Worker running at: {time}", DateTimeOffset.Now);
+
+                // Process and store view count for application
+
+                // Process and store view data for data lake
+
+                // Get frequency from configuration
+
                 await Task.Delay(1000, stoppingToken);
             }
         }
