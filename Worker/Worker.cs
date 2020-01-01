@@ -5,31 +5,50 @@ using System.Threading;
 using System.Threading.Tasks;
 using Microsoft.Extensions.Hosting;
 using Microsoft.Extensions.Logging;
+using Worker.Models.Persistence.StorageAccount;
+using Worker.Models.Persistence.StorageSharedKey;
 
 namespace Worker
 {
     public class Worker : BackgroundService
     {
         private readonly ILogger<Worker> _logger;
+        private readonly Models.Configuration.Settings _settings;
+        private readonly IStorageContext _storageContext;
+        private readonly IStorageSharedKeyContext _storageSharedKeyContext;
 
-        public Worker(ILogger<Worker> logger)
+        public Worker(ILogger<Worker> logger, Models.Configuration.Settings settings, IStorageContext storageContext, IStorageSharedKeyContext storageSharedKeyContext)
         {
             _logger = logger;
+            _settings = settings;
+            _storageContext = storageContext;
+            _storageSharedKeyContext = storageSharedKeyContext;
         }
 
         protected override async Task ExecuteAsync(CancellationToken stoppingToken)
         {
             while (!stoppingToken.IsCancellationRequested)
             {
-                _logger.LogInformation("Worker running at: {time}", DateTimeOffset.Now);
+                _logger.LogInformation($"{_settings.Application.Name} ({_settings.Application.Version}) running at: {DateTimeOffset.Now}");
 
-                // Process and store view count for application
 
-                // Process and store view data for data lake
+                var temporalState = await Logging.TemporalState.GetNextTemporalStateAsync();
 
-                // Get frequency from configuration
+                // Get telemetry data to process 
 
-                await Task.Delay(1000, stoppingToken);
+                #region Run Tasks
+
+                var one = await Tasks.UpdateContentViewCount.RunAsync();
+                var two = await Tasks.UpdateContentViewApplicationReports.RunAsync();
+                var three = await Tasks.UpdateContentViewDataLakeReports.RunAsync();
+
+                #endregion
+
+
+                // Update last run
+                var logged = await Logging.TemporalState.UpdateLastTemporalStateAsync();
+
+                await Task.Delay(_settings.Application.Frequency, stoppingToken);
             }
         }
     }
