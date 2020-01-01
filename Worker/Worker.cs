@@ -32,11 +32,14 @@ namespace Worker
                 _logger.LogInformation($"{_settings.Application.Name} ({_settings.Application.Version}) running at: {DateTimeOffset.Now}");
 
 
-                var temporalState = await Logging.TemporalState.GetNextTemporalStateAsync();
+                // Get next temporal state to run
+                var temporalState = await Logging.TemporalStateManager.GetNextTemporalStateAsync();
 
-                // Get telemetry data to process 
+                _logger.LogInformation($"Next temporal state:{temporalState.Table}|{temporalState.Partition}");
 
-                #region Run Tasks
+                // Get telemetry data to process for current temporal state
+
+                #region Run All Tasks
 
                 var one = await Tasks.UpdateContentViewCount.RunAsync();
                 var two = await Tasks.UpdateContentViewApplicationReports.RunAsync();
@@ -44,9 +47,10 @@ namespace Worker
 
                 #endregion
 
+                // TODO: Add timers, logging, etc...
 
                 // Update last run
-                var logged = await Logging.TemporalState.UpdateLastTemporalStateAsync();
+                var logged = await Logging.TemporalStateManager.UpdateLastTemporalStateAsync(temporalState);
 
                 await Task.Delay(_settings.Application.Frequency, stoppingToken);
             }
