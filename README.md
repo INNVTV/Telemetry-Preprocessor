@@ -26,10 +26,10 @@ For the same reasons stated above this is a no-brainer. Even avoiding services s
 * Process locally. 
 * Send results to cloud storage, data lakes & databases. 
 
-![EventSourcing](https://github.com/INNVTV/Telemetry-Preprocessor/blob/master/_docs/images/event-sourcing.png)
-
 # Event Sourcing & Temporal Queries
 Having the raw telemetry data stored as blocks of time will allow for new preprocessors to come online and gather past data. You also have the option of replaying actions as well as running temporal queries.
+
+![EventSourcing](https://github.com/INNVTV/Telemetry-Preprocessor/blob/master/_docs/images/event-sourcing.png)
 
 
 
