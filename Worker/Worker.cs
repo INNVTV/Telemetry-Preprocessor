@@ -39,7 +39,21 @@ namespace Worker
 
                 // Get telemetry data to process for current temporal state
 
-                #region Run All Tasks
+                #region Notes
+                /*
+                 
+                 In this example we query to fiter out only telemetry that has a 'ContentId'
+
+                 In some scenarios you may want to partition your temetry tables to focus on one entity type such as:
+                    'platform', 'account', 'user', 'content', etc...
+
+                You may aso have multiple preprocessors focusing on different aspects of each entity type.
+                In this exampe the focus is purely on Content Views
+
+                */
+                #endregion
+
+                #region Run All Tasks for Content
 
                 var one = await Tasks.UpdateContentViewCount.RunAsync();
                 var two = await Tasks.UpdateContentViewApplicationReports.RunAsync();
