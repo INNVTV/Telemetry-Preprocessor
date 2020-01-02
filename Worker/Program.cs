@@ -28,12 +28,13 @@ namespace Worker
                     Models.Configuration.Settings settings = new Models.Configuration.Settings(configuration);
 
                     // Create Persistence models
-                    //IDocumentContext documentContext = new DocumentContext(configuration);
+                    IDocumentContext documentContext = new DocumentContext(configuration);
                     IApplicationStorageAccount applicationStorageAccount = new ApplicationStorageAccount(configuration); //<-- Legacy
                     IDataLakeStorageSharedKey dataLakeStorageSharedKey = new DataLakeStorageSharedKey(configuration); //<-- Latest (in preview)
                     //IRedisContext redisContext = new RedisContext(configuration);
 
                     services.AddSingleton(settings);
+                    services.AddSingleton(documentContext);
                     services.AddSingleton(applicationStorageAccount);
                     services.AddSingleton(dataLakeStorageSharedKey);
 

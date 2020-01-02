@@ -20,7 +20,6 @@ namespace Worker.Logging
 
         public static async Task<bool> UpdateLastTemporalStateAsync(TemporalState currentState)
         {
-
             return true;
         }
     }

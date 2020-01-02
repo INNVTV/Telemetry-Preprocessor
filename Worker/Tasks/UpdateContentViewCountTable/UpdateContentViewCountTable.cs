@@ -9,7 +9,7 @@ using Worker.Models.TableEntities;
 
 namespace Worker.Tasks
 {
-    public static class UpdateContentViewCount
+    public static class UpdateContentViewCountTable
     {
         public static async Task<bool> RunAsync(List<SourceActivityLog> telemetryData, IApplicationStorageAccount applicationStorageAccount)
         {
