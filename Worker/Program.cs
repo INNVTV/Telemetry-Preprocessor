@@ -6,10 +6,9 @@ using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
 using Worker.Models.Configuration;
+using Worker.Models.Persistence;
 using Worker.Models.Persistence.DocumentDatabase;
 using Worker.Models.Persistence.RedisCache;
-using Worker.Models.Persistence.StorageAccount;
-using Worker.Models.Persistence.StorageSharedKey;
 
 namespace Worker
 {
@@ -30,13 +29,13 @@ namespace Worker
 
                     // Create Persistence models
                     //IDocumentContext documentContext = new DocumentContext(configuration);
-                    IStorageContext storageContext = new StorageContext(configuration); //<-- Legacy
-                    IStorageSharedKeyContext storageSharedKeyContext = new StorageSharedKeyContext(configuration); //<-- Latest (in preview)
+                    IApplicationStorageAccount applicationStorageAccount = new ApplicationStorageAccount(configuration); //<-- Legacy
+                    IDataLakeStorageSharedKey dataLakeStorageSharedKey = new DataLakeStorageSharedKey(configuration); //<-- Latest (in preview)
                     //IRedisContext redisContext = new RedisContext(configuration);
 
                     services.AddSingleton(settings);
-                    services.AddSingleton(storageContext);
-                    services.AddSingleton(storageSharedKeyContext);
+                    services.AddSingleton(applicationStorageAccount);
+                    services.AddSingleton(dataLakeStorageSharedKey);
 
                     services.AddHostedService<Worker>();
                 });

@@ -10,12 +10,12 @@ namespace Worker.Logging
     {
         public static async Task<TemporalState> GetLastTemporalStateAsync()
         {
-            return new TemporalState("2019", "01", "02", "30");
+            return new TemporalState("2019", "12", "30", "02", "12");
         }
 
         public static async Task<TemporalState> GetNextTemporalStateAsync()
         {
-            return new TemporalState("2019", "01", "02", "30");
+            return new TemporalState("2019", "12", "30", "02", "12");
         }
 
         public static async Task<bool> UpdateLastTemporalStateAsync(TemporalState currentState)

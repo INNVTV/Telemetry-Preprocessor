@@ -4,14 +4,14 @@ using System;
 using System.Collections.Generic;
 using System.Text;
 
-namespace Worker.Models.Persistence.StorageSharedKey
+namespace Worker.Models.Persistence
 {
-    public class StorageSharedKeyContext : IStorageSharedKeyContext
+    public class DataLakeStorageSharedKey : IDataLakeStorageSharedKey
     {
-        public StorageSharedKeyContext(IConfiguration configuration)
+        public DataLakeStorageSharedKey(IConfiguration configuration)
         {
 
-            Settings = new StorageSettings();
+            Settings = new DataLakeStorageSettings();
 
             #region Map appsettings.json
 
@@ -43,7 +43,7 @@ namespace Worker.Models.Persistence.StorageSharedKey
         }
 
         public StorageSharedKeyCredential SharedKeyCredentials { get; set; }
-        public StorageSettings Settings { get; set; }
+        public DataLakeStorageSettings Settings { get; set; }
         public StorageURIs URIs { get; set; }
     }
 }

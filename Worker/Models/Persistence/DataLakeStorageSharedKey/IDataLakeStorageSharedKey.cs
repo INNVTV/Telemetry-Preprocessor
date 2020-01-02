@@ -3,16 +3,16 @@ using System;
 using System.Collections.Generic;
 using System.Text;
 
-namespace Worker.Models.Persistence.StorageSharedKey
+namespace Worker.Models.Persistence
 {
-    public interface IStorageSharedKeyContext
+    public interface IDataLakeStorageSharedKey
     {
         StorageSharedKeyCredential SharedKeyCredentials { get; set; }
-        StorageSettings Settings { get; set; }
+        DataLakeStorageSettings Settings { get; set; }
         StorageURIs URIs { get; set; }
     }
 
-    public class StorageSettings
+    public class DataLakeStorageSettings
     {
         public string Name { get; set; }
         public string Key { get; set; }

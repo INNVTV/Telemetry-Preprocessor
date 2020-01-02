@@ -3,10 +3,11 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Threading;
 using System.Threading.Tasks;
+using Microsoft.Azure.Cosmos.Table;
 using Microsoft.Extensions.Hosting;
 using Microsoft.Extensions.Logging;
-using Worker.Models.Persistence.StorageAccount;
-using Worker.Models.Persistence.StorageSharedKey;
+using Worker.Models.Persistence;
+using Worker.Models.TableEntities;
 
 namespace Worker
 {
@@ -14,15 +15,15 @@ namespace Worker
     {
         private readonly ILogger<Worker> _logger;
         private readonly Models.Configuration.Settings _settings;
-        private readonly IStorageContext _storageContext;
-        private readonly IStorageSharedKeyContext _storageSharedKeyContext;
+        private readonly IApplicationStorageAccount _applicationStorageAccount;
+        private readonly IDataLakeStorageSharedKey _dataLakeStorageSharedKey;
 
-        public Worker(ILogger<Worker> logger, Models.Configuration.Settings settings, IStorageContext storageContext, IStorageSharedKeyContext storageSharedKeyContext)
+        public Worker(ILogger<Worker> logger, Models.Configuration.Settings settings, IApplicationStorageAccount applicationStorageAccount, IDataLakeStorageSharedKey dataLakeStorageSharedKey)
         {
             _logger = logger;
             _settings = settings;
-            _storageContext = storageContext;
-            _storageSharedKeyContext = storageSharedKeyContext;
+            _applicationStorageAccount = applicationStorageAccount;
+            _dataLakeStorageSharedKey = dataLakeStorageSharedKey;
         }
 
         protected override async Task ExecuteAsync(CancellationToken stoppingToken)
@@ -35,9 +36,46 @@ namespace Worker
                 // Get next temporal state to run
                 var temporalState = await Logging.TemporalStateManager.GetNextTemporalStateAsync();
 
-                _logger.LogInformation($"Next temporal state:{temporalState.Table}|{temporalState.Partition}");
+                _logger.LogInformation($"Next temporal state: {temporalState.TemporalTableSegment} | {temporalState.TablePartition}");
 
-                // Get telemetry data to process for current temporal state
+                // Get all telemetry data to process for current temporal state:
+
+                #region Query table data
+
+                var tableName = _settings.Application.TemporalSourceTable + temporalState.TemporalTableSegment;
+
+                var dataLakeCloudStorageAccount = CloudStorageAccount.Parse(
+                string.Concat(
+                    "DefaultEndpointsProtocol=https;AccountName=",
+                    _dataLakeStorageSharedKey.Settings.Name,
+                    ";AccountKey=",
+                    _dataLakeStorageSharedKey.Settings.Key)
+                );
+
+                CloudTableClient tableClient = dataLakeCloudStorageAccount.CreateCloudTableClient();
+                CloudTable table = tableClient.GetTableReference(tableName);
+
+                TableQuery<SourceActivityLog> query = new TableQuery<SourceActivityLog>()
+                    .Where(
+                        TableQuery.CombineFilters(
+                            TableQuery.GenerateFilterCondition("PartitionKey", QueryComparisons.Equal, temporalState.TablePartition),
+                            TableOperators.And,
+                            TableQuery.GenerateFilterCondition("Activity", QueryComparisons.Equal, "View") //<-- we only want records that have an activity type of "View"
+                    )).Take(1000);
+
+                var results = await table.ExecuteQuerySegmentedAsync<SourceActivityLog>(query, null);
+
+                List<SourceActivityLog> telemetryData = results.ToList();
+
+                // Iterate until we get all results
+                while(results.ContinuationToken != null)
+                {
+                    results = await table.ExecuteQuerySegmentedAsync<SourceActivityLog>(query, results.ContinuationToken);
+                    telemetryData.AddRange(results);
+                }
+
+                #endregion
+
 
                 #region Notes
                 /*
@@ -55,16 +93,21 @@ namespace Worker
 
                 #region Run All Tasks for Content
 
-                var one = await Tasks.UpdateContentViewCount.RunAsync();
-                var two = await Tasks.UpdateContentViewApplicationReports.RunAsync();
-                var three = await Tasks.UpdateContentViewDataLakeReports.RunAsync();
+                var taskOne = await Tasks.UpdateContentViewCount.RunAsync(telemetryData, _applicationStorageAccount);
+                var taskTwo = await Tasks.UpdateContentViewApplicationReports.RunAsync(telemetryData, _applicationStorageAccount, temporalState.TemporalTableSegment);
+                var taskThree = await Tasks.UpdateContentViewDataLakeReports.RunAsync(telemetryData, _dataLakeStorageSharedKey, temporalState);
 
                 #endregion
 
                 // TODO: Add timers, logging, etc...
 
-                // Update last run
-                var logged = await Logging.TemporalStateManager.UpdateLastTemporalStateAsync(temporalState);
+                // TODO: Add rollbacks if some tasks fail
+
+                if(taskOne && taskTwo && taskThree)
+                {
+                    // Update last run
+                    var logged = await Logging.TemporalStateManager.UpdateLastTemporalStateAsync(temporalState);
+                }
 
                 await Task.Delay(_settings.Application.Frequency, stoppingToken);
             }

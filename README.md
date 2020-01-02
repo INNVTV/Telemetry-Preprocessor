@@ -1,5 +1,5 @@
 ## Telemetry Preprocessor
-Preprocessor component for raw telemetry data on Azure table storage.
+Preprocessor ETL component for raw telemetry data on Azure table storage and Azure Data Lake.
 
 # Preprocessor Workflow
 ![AuthenticationFlow](https://github.com/INNVTV/Telemetry-Preprocessor/blob/master/_docs/images/processing-workflow.png)

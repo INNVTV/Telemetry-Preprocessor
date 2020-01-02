@@ -6,23 +6,25 @@ namespace Worker.Models
 {
     public class TemporalState
     {
-        public TemporalState(string year, string month, string day, string minute)
+        public TemporalState(string year, string month, string day, string hour, string minute)
         {
             Year = year;
             Month = month;
             Day = day;
+            Hour = hour;
             Minute = minute;
 
-            Table = Year + Month + Day;
-            Partition = Minute;
+            TemporalTableSegment = Year + Month + Day + Hour;
+            TablePartition = Minute;
         }
 
         public string Year { get; set; }
         public string Month { get; set; }
         public string Day { get; set; }
+        public string Hour { get; set; }
         public string Minute { get; set; }
-        public string Table { get; set; }
-        public string Partition { get; set; }
+        public string TemporalTableSegment { get; set; }
+        public string TablePartition { get; set; }
 
     }
 }
