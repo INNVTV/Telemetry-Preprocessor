@@ -48,5 +48,11 @@ Having the raw telemetry data stored as blocks of time will allow for new prepro
 
 ![EventSourcing](https://github.com/INNVTV/Telemetry-Preprocessor/blob/master/_docs/images/event-sourcing.png)
 
+# Production Pipelines
+Scalable production scenarios should break telemetry up based on logical entities in order to better manage, isolate and update telemetry scenarios. Each temporal log can then have many preprocessors each focused on one dimension per entity. For example sentiment on content or recommendations for users based on interaction data.
+
+![ProductionPipelines](https://github.com/INNVTV/Telemetry-Preprocessor/blob/master/_docs/images/production-pipelines.png)
+
+
 
 
