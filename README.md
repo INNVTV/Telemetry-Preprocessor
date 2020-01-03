@@ -1,8 +1,9 @@
-## Telemetry Preprocessor
-Preprocessor ETL component for raw telemetry data on Azure table storage and Azure Data Lake.
+# Telemetry Preprocessor
+Preprocessor/ETL component for raw telemetry data on Azure Table Storage and Azure Data Lake. Implements a "Data Factory" role to clean and prepare data for application use as well as for downstream data engineering and machine learning tasks.
 
 # Preprocessor Workflow
 ![AuthenticationFlow](https://github.com/INNVTV/Telemetry-Preprocessor/blob/master/_docs/images/processing-workflow.png)
+The preprocessor determines last and next temporal state to process from the available raw telemetry data. Once cleaned and prepared for processing it determines next temporal state to process until it is caught up to the current buffer before sleeping.
 
 ## Deployment Options
 ![DeploymentOptions](https://github.com/INNVTV/Telemetry-Preprocessor/blob/master/_docs/images/deployment-options.png)
@@ -26,7 +27,7 @@ For the same reasons stated above this is a no-brainer. Even avoiding services s
 * Process locally. 
 * Send results to cloud storage, data lakes & databases. 
 
-## Workers And Queues
+# Workers And Queues
 ![WorkersAndQueues](https://github.com/INNVTV/Telemetry-Preprocessor/blob/master/_docs/images/workers-queues.png)
 
 A queing system is implemented to ensure that any issues that arise within a particular task can be isolated and it's messages can be picked up and processed later. In production scenarios health checks should be implemented and alert messages should be fired to relevant engineers.
@@ -36,7 +37,7 @@ The MainWorker is responsible for parsing out blocks of temporal state from our 
 #### Exponential Back-Off
 All workers (including main) impement an exponential back-off pattern in order to minimize/maximize polling during busy or quiet periods. Task workers implement a simple version of this while Main will also include a factor of what the current UTC time is in order to catch up with new telemetry data based on temporal states.
 
-## Debugging Multiple Projects
+# Debugging Multiple Projects
 ![DebugMultipleProjects](https://github.com/INNVTV/Telemetry-Preprocessor/blob/master/_docs/images/debug-multiple-projects.png)
 Since each preprocessor is composed of multiple workers in a singe solution be sure to have multiple startup projects selected as shown above.
 
