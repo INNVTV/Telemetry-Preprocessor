@@ -3,9 +3,11 @@ Preprocessor/ETL component for raw telemetry data on Azure Table Storage and Azu
 
 # Preprocessor Workflow
 ![AuthenticationFlow](https://github.com/INNVTV/Telemetry-Preprocessor/blob/master/_docs/images/processing-workflow.png)
+
+# Temporal State
 The preprocessor determines last and next temporal state to process from the available raw telemetry data. Once cleaned and prepared for processing it determines next temporal state to process until it is caught up to the current buffer before sleeping.
 
-## Deployment Options
+# Deployment Options
 ![DeploymentOptions](https://github.com/INNVTV/Telemetry-Preprocessor/blob/master/_docs/images/deployment-options.png)
 
 Each preprocessor can be deployed as a serverless function app, as a container within a kubernetes cluster, within a service fabric cluster or any number of similar deplyment architectures. You can also choose to run these on premises as no incoming traffic needs to be handled.
