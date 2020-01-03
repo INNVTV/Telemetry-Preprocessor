@@ -27,7 +27,7 @@ For the same reasons stated above this is a no-brainer. Even avoiding services s
 * Send results to cloud storage, data lakes & databases. 
 
 ## Workers And Queues
-![WorkersAndQueues](https://github.com/INNVTV/Telemetry-Preprocessor/blob/master/_docs/images/workers-queus.png)
+![WorkersAndQueues](https://github.com/INNVTV/Telemetry-Preprocessor/blob/master/_docs/images/workers-queues.png)
 
 A queing system is implemented to ensure that any issues that arise within a particular task can be isolated and it's messages can be picked up and processed later. In production scenarios health checks should be implemented and alert messages should be fired to relevant engineers.
 
