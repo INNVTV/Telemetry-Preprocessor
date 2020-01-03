@@ -26,6 +26,20 @@ For the same reasons stated above this is a no-brainer. Even avoiding services s
 * Process locally. 
 * Send results to cloud storage, data lakes & databases. 
 
+## Workers And Queues
+![WorkersAndQueues](https://github.com/INNVTV/Telemetry-Preprocessor/blob/master/_docs/images/workers-queus.png)
+
+A queing system is implemented to ensure that any issues that arise within a particular task can be isolated and it's messages can be picked up and processed later. In production scenarios health checks should be implemented and alert messages should be fired to relevant engineers.
+
+The MainWorker is responsible for parsing out blocks of temporal state from our source telemetry data. It then cleans the data and prepares it for our workers. Once all messages have been sent the main worker logs the processing tasks and determines if a new temporal state is available from the source.
+
+#### Exponential Back-Off
+All workers (including main) impement an exponential back-off pattern in order to minimize/maximize polling during busy or quiet periods. Task workers implement a simple version of this while Main will also include a factor of what the current UTC time is in order to catch up with new telemetry data based on temporal states.
+
+## Debugging Multiple Projects
+![DebugMultipleProjects](https://github.com/INNVTV/Telemetry-Preprocessor/blob/master/_docs/images/debug-multiple-projects.png)
+Since each preprocessor is composed of multiple workers in a singe solution be sure to have multiple startup projects selected as shown above.
+
 # Event Sourcing & Temporal Queries
 Having the raw telemetry data stored as blocks of time will allow for new preprocessors to come online and gather past data. You also have the option of replaying actions as well as running temporal queries.
 
