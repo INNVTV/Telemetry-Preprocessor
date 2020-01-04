@@ -5,7 +5,8 @@ Preprocessor/ETL component for raw telemetry data on Azure Table Storage and Azu
 ![AuthenticationFlow](https://github.com/INNVTV/Telemetry-Preprocessor/blob/master/_docs/images/processing-workflow.png)
 
 # Temporal State
-The preprocessor determines last and next temporal state to process from the available raw telemetry data. Once cleaned and prepared for processing it determines next temporal state to process until it is caught up to the current buffer before sleeping.
+![TemporalState](https://github.com/INNVTV/Telemetry-Preprocessor/blob/master/_docs/images/temporal-state.png)
+The preprocessor determines last and next temporal state to process from the available raw telemetry data. Once cleaned and prepared for processing it determines next temporal state to process until it is caught up to the current buffer before sleeping. In this sample code each table stores an hour of data partitioned by the minute. The main preprocessor runs batches of telemetry data by the minute until it reaches the buffer limit. The buffer limit is set to avoid processing a minute block that still has telemetry data coming in.
 
 # Deployment Options
 ![DeploymentOptions](https://github.com/INNVTV/Telemetry-Preprocessor/blob/master/_docs/images/deployment-options.png)
