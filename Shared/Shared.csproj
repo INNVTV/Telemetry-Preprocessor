@@ -7,6 +7,7 @@
   <ItemGroup>
     <PackageReference Include="Azure.Storage.Queues" Version="12.1.0" />
     <PackageReference Include="Microsoft.Azure.Cosmos.Table" Version="2.0.0-preview" />
+    <PackageReference Include="Microsoft.Extensions.Configuration" Version="3.1.0" />
   </ItemGroup>
 
   <ItemGroup>
@@ -15,8 +16,6 @@
     <Folder Include="Persistence\Redis\" />
     <Folder Include="Persistence\Storage\ApplicationStorage\" />
     <Folder Include="Persistence\Storage\DataLakeStorage\" />
-    <Folder Include="Persistence\Storage\" />
-    <Folder Include="Persistence\Storage\PreprocessorStorage\" />
   </ItemGroup>
 
 </Project>

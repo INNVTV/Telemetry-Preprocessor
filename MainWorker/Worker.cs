@@ -6,16 +6,22 @@ using System.Threading.Tasks;
 using Microsoft.Extensions.Hosting;
 using Microsoft.Extensions.Logging;
 using Shared.Models;
+using Shared.Persistence.Storage.Preprocessor;
+using Shared.Persistence.Storage.Telemetry;
 
 namespace MainWorker
 {
     public class Worker : BackgroundService
     {
         private readonly ILogger<Worker> _logger;
+        private readonly ITelemetryStorageContext _telemetryStorageContext;
+        private readonly IPreprocessorStorageContext _preprocessorStorageContext;
 
-        public Worker(ILogger<Worker> logger)
+        public Worker(ILogger<Worker> logger, ITelemetryStorageContext telemetryStorageContext, IPreprocessorStorageContext preprocessorStorageContext)
         {
             _logger = logger;
+            _telemetryStorageContext = telemetryStorageContext;
+            _preprocessorStorageContext = preprocessorStorageContext;
         }
 
         protected override async Task ExecuteAsync(CancellationToken stoppingToken)
