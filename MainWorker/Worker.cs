@@ -31,29 +31,25 @@ namespace MainWorker
 
             while (!stoppingToken.IsCancellationRequested)
             {
-                // Get last run temporal state
-                var lastTemporalState = new TemporalState("2020", "01", "04", "13", "50");
+                // Get next temporal state to run
+                var temporalState = await Tasks.NextTemporalState.GetAsync(_preprocessorStorageContext);
 
-                DateTime lastRunDateTime = Shared.Transformations.ConvertTemporalStateToDateTime(lastTemporalState);
+                // Get buffer delta in minutes to determine if worker should continue processing telemetry or sleep
+                DateTime nextRunDateTime = Shared.Transformations.ConvertTemporalStateToDateTime(temporalState);
                 DateTime currentDateTime = DateTime.UtcNow;
-                double bufferMinutes = (lastRunDateTime - currentDateTime).TotalMinutes;
-
-                // Get last run hour/minute: 202001011234
-                // Get current hour/minute: 202001011236
-                // Convert both to DateTime and check if we are within buffer.
+                double bufferMinutes = (nextRunDateTime - currentDateTime).TotalMinutes;
              
                 if (bufferMinutes <= bufferMinutesLimit)
                 {
-                    // If we are below buffer limit we can get the next temporal state by adding 1 minute to lastRunDateTime
-                    DateTime nextRunDateTime = lastRunDateTime.AddMinutes(1);
-                    var temporalState = new TemporalState(nextRunDateTime);
+                    int recordsProcessed = 0;
 
                     // Get next batch of telemetry, clean data, send message queus to workers
-                    var result = await Telemetry.PrcocessAsync(temporalState);
+                    var result = await Tasks.ProcessTelemetry.RunAsync(temporalState);
                    
                     if(result)
                     {
                         // Log last run temporal state
+                        var loggingResult = await Tasks.LogLastTemporalState.RunAsync(_preprocessorStorageContext, temporalState, recordsProcessed);
 
                         _logger.LogInformation($"Temporal state: {temporalState.TemporalStateId} processed.");
 

@@ -38,6 +38,20 @@ namespace Shared.Models
             TemporalStateId = TelemetryTableSegment + TelemetryTablePartition;
         }
 
+        public TemporalState(string temporalId)
+        {
+            Year = temporalId.Substring(0, 4);
+            Month = temporalId.Substring(4, 2);
+            Day = temporalId.Substring(6, 2);
+            Hour = temporalId.Substring(8, 2);
+            Minute = temporalId.Substring(10, 2);
+
+            TelemetryTableSegment = Year + Month + Day + Hour;
+            TelemetryTablePartition = Minute;
+
+            TemporalStateId = TelemetryTableSegment + TelemetryTablePartition;
+        }
+
         public string Year { get; set; }
         public string Month { get; set; }
         public string Day { get; set; }

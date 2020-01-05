@@ -4,11 +4,11 @@ using System.Collections.Generic;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace MainWorker
+namespace MainWorker.Tasks
 {
-    public static class Telemetry
+    public static class ProcessTelemetry
     {
-        public async static Task<bool> PrcocessAsync(TemporalState temporalState)
+        public async static Task<bool> RunAsync(TemporalState temporalState)
         {
             return true;
         }
