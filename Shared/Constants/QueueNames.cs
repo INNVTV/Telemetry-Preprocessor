@@ -2,7 +2,7 @@
 using System.Collections.Generic;
 using System.Text;
 
-namespace Shared.Common.Constants
+namespace Shared.Constants
 {
     /*
      *  Queue Naming Rules

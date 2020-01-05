@@ -3,9 +3,9 @@ using System;
 using System.Collections.Generic;
 using System.Text;
 
-namespace Shared.Common
+namespace Shared
 {
-    public static class Methods
+    public static class Transformations
     {
         public static DateTime ConvertTemporalStateToDateTime(TemporalState temporalState)
         {

@@ -28,7 +28,7 @@ namespace MainWorker
                 // Get last run temporal state
                 var lastTemporalState = new TemporalState("2020", "01", "04", "13", "50");
 
-                DateTime lastRunDateTime = Shared.Common.Methods.ConvertTemporalStateToDateTime(lastTemporalState);
+                DateTime lastRunDateTime = Shared.Transformations.ConvertTemporalStateToDateTime(lastTemporalState);
                 DateTime currentDateTime = DateTime.UtcNow;
                 double bufferMinutes = (lastRunDateTime - currentDateTime).TotalMinutes;
 
