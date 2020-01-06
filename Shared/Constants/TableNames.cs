@@ -6,7 +6,7 @@ namespace Shared.Constants
 {
     public static class TableNames
     {
-        public readonly static string TelemetryBase = "telemetry";
+        public readonly static string TelemetryBase = "activitybyhour";
         public readonly static string MainWorkerLog = "mainworkerlog";
     }
 }

@@ -28,7 +28,7 @@ namespace MainWorker
         protected override async Task ExecuteAsync(CancellationToken stoppingToken)
         {
             // Once we are caught up within 2 minutes of temporal data from our telemetry data we slow down our processing
-            double bufferMinutesLimit = -2;
+            double bufferMinutesLimit = -1.5;
 
             while (!stoppingToken.IsCancellationRequested)
             {
@@ -68,7 +68,7 @@ namespace MainWorker
                         // Log last run temporal state
                         var loggingResult = await Tasks.LogLastTemporalState.RunAsync(_preprocessorStorageContext, temporalState, recordsProcessed, messagesSent);
 
-                        _logger.LogInformation($"Temporal state: {temporalState.TemporalStateId} processed.");
+                        _logger.LogInformation($"Temporal state: {temporalState.TemporalStateId} processed {recordsProcessed} records, sent {messagesSent} messages.");
 
                         // Sleep for 1 second
                         _logger.LogInformation("Main worker sleeping for 1 second.");
@@ -76,9 +76,15 @@ namespace MainWorker
 
                     }
                     else
-                    {
+                    {                      
+                        _logger.LogError($"There were issues getting telemetry data: {telemetryDataResponse.ErrorMessage}");
+
                         //TODO: Log issues running task
                         //TODO: Alert engineers
+
+                        // Sleep for 1 second
+                        _logger.LogInformation("Main worker sleeping for 1 second.");
+                        await Task.Delay(1000, stoppingToken);
                     }
                 }
                 else

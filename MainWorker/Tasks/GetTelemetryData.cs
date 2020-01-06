@@ -37,23 +37,31 @@ namespace MainWorker.Tasks
                 CloudTableClient tableClient = telemetryStorageContext.StorageAccount.CreateCloudTableClient();
                 CloudTable table = tableClient.GetTableReference(tableName);
 
-                TableQuery<SourceTelemetryLog> query = new TableQuery<SourceTelemetryLog>()
-                    .Where(
-                        TableQuery.CombineFilters(
-                            TableQuery.GenerateFilterCondition("PartitionKey", QueryComparisons.Equal, temporalState.TelemetryTablePartition),
-                            TableOperators.And,
-                            TableQuery.GenerateFilterCondition("Activity", QueryComparisons.Equal, "View") //<-- we only want records that have an activity type of "View"
-                    )).Take(1000);
-
-                var results = await table.ExecuteQuerySegmentedAsync<SourceTelemetryLog>(query, null);
-
-                response.TelemetryData = results.ToList();
-
-                // Iterate until we get all results
-                while (results.ContinuationToken != null)
+                if(table.Exists())
                 {
-                    results = await table.ExecuteQuerySegmentedAsync<SourceTelemetryLog>(query, results.ContinuationToken);
-                    response.TelemetryData.AddRange(results);
+                    TableQuery<SourceTelemetryLog> query = new TableQuery<SourceTelemetryLog>()
+                        .Where(
+                            TableQuery.CombineFilters(
+                                TableQuery.GenerateFilterCondition("PartitionKey", QueryComparisons.Equal, temporalState.TelemetryTablePartition),
+                                TableOperators.And,
+                                TableQuery.GenerateFilterCondition("Activity", QueryComparisons.Equal, "View") //<-- we only want records that have an activity type of "View"
+                        )).Take(1000);
+
+                    var results = await table.ExecuteQuerySegmentedAsync<SourceTelemetryLog>(query, null);
+
+                    response.TelemetryData = results.ToList();
+
+                    // Iterate until we get all results
+                    while (results.ContinuationToken != null)
+                    {
+                        results = await table.ExecuteQuerySegmentedAsync<SourceTelemetryLog>(query, results.ContinuationToken);
+                        response.TelemetryData.AddRange(results);
+                    }
+
+                }
+                else
+                {
+                    // Table does not exist so there is no telemetry data to process in the given temporal state
                 }
 
                 response.IsSuccess = true;
