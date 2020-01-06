@@ -44,10 +44,36 @@ namespace MainWorker
                     int recordsProcessed = 0;
 
                     // Get next batch of telemetry, clean data, send message queus to workers
-                    var result = await Tasks.ProcessTelemetry.RunAsync(temporalState);
-                   
-                    if(result)
+                    var telemetryDataResponse = await Tasks.GetTelemetryData.RunAsync(temporalState, _telemetryStorageContext);
+
+                    if(telemetryDataResponse.IsSuccess)
                     {
+                        var telemetryData = telemetryDataResponse.TelemetryData;
+
+                        if (telemetryData != null && telemetryData.Count > 0)
+                        {
+                            recordsProcessed = telemetryData.Count;
+
+                            #region
+
+                            // First we group by same content id for this time span
+                            /*
+                            var groupedContent = telemetryData
+                            .GroupBy(u => u.ContentId)
+                            .Select(grp => grp.ToList())
+                            .ToList();
+
+                            foreach (var contentViewList in groupedContent)
+                            {
+                                // We get the count of each list and append to the view count for each content
+                                string accountId = contentViewList[0].AccountId;
+                                string contentId = contentViewList[0].ContentId;
+                                int newViews = contentViewList.Count;
+                            }
+                            */
+                            #endregion
+                        }
+
                         // Log last run temporal state
                         var loggingResult = await Tasks.LogLastTemporalState.RunAsync(_preprocessorStorageContext, temporalState, recordsProcessed);
 
@@ -56,6 +82,7 @@ namespace MainWorker
                         // Sleep for 1 second
                         _logger.LogInformation("Main worker sleeping for 1 second.");
                         await Task.Delay(1000, stoppingToken);
+
                     }
                     else
                     {
