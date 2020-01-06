@@ -11,13 +11,13 @@ namespace MainWorker.Tasks
 {
     public class LogLastTemporalState
     {
-        public async static Task<bool> RunAsync(IPreprocessorStorageContext preprocessorStorageContext, TemporalState temporalState, int recordsProcessed)
+        public async static Task<bool> RunAsync(IPreprocessorStorageContext preprocessorStorageContext, TemporalState temporalState, int recordsProcessed, int messagesSent)
         {
 
             CloudTableClient tableClient = preprocessorStorageContext.StorageAccount.CreateCloudTableClient();
             CloudTable table = tableClient.GetTableReference(Shared.Constants.TableNames.MainWorkerLog);
 
-            var mainWorkerLog = new MainWorkerLog(temporalState.TemporalStateId, recordsProcessed);
+            var mainWorkerLog = new MainWorkerLog(temporalState.TemporalStateId, recordsProcessed, messagesSent);
 
             TableOperation operation = TableOperation.Insert((mainWorkerLog));
 

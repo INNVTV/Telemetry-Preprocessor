@@ -13,7 +13,7 @@ namespace MainWorker.Models.TableEntities
 
         }
 
-        public MainWorkerLog(string temporalId, int recordsProcessed)
+        public MainWorkerLog(string temporalId, int recordsProcessed, int messagesSent)
         {
             RowKey = temporalId;
 
@@ -21,6 +21,7 @@ namespace MainWorker.Models.TableEntities
             PartitionKey = string.Format("{0:D19}", DateTime.MaxValue.Ticks - DateTime.UtcNow.Ticks);
             
             RecordsProcessed = recordsProcessed;
+            MessagesSent = messagesSent;
             DateProcessed = DateTime.UtcNow;
         }
 
@@ -31,6 +32,7 @@ namespace MainWorker.Models.TableEntities
         }
 
         public int RecordsProcessed { get; set; }
+        public int MessagesSent { get; set; }
         public DateTime DateProcessed { get; set; }
 
     }

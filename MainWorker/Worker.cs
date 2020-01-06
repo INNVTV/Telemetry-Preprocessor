@@ -6,6 +6,7 @@ using System.Threading.Tasks;
 using Microsoft.Extensions.Hosting;
 using Microsoft.Extensions.Logging;
 using Shared.Models;
+using Shared.Models.QueueMessages;
 using Shared.Persistence.Storage.Preprocessor;
 using Shared.Persistence.Storage.Telemetry;
 
@@ -42,6 +43,7 @@ namespace MainWorker
                 if (bufferMinutes <= bufferMinutesLimit)
                 {
                     int recordsProcessed = 0;
+                    int messagesSent = 0;
 
                     // Get next batch of telemetry, clean data, send message queus to workers
                     var telemetryDataResponse = await Tasks.GetTelemetryData.RunAsync(temporalState, _telemetryStorageContext);
@@ -52,30 +54,19 @@ namespace MainWorker
 
                         if (telemetryData != null && telemetryData.Count > 0)
                         {
+                            // Process telemetry (merge data, convert to queue messages for task workers)
+                            var queueMessages = await Tasks.ProcessTelemetry.RunAsync(telemetryData, temporalState);
+
+                            // Send messages to task workers
+                            var messageQueueResponse = await Tasks.SendQueueMessages.RunAsync(_preprocessorStorageContext, queueMessages);
+
+                            // Update logging metrics
                             recordsProcessed = telemetryData.Count;
-
-                            #region
-
-                            // First we group by same content id for this time span
-                            /*
-                            var groupedContent = telemetryData
-                            .GroupBy(u => u.ContentId)
-                            .Select(grp => grp.ToList())
-                            .ToList();
-
-                            foreach (var contentViewList in groupedContent)
-                            {
-                                // We get the count of each list and append to the view count for each content
-                                string accountId = contentViewList[0].AccountId;
-                                string contentId = contentViewList[0].ContentId;
-                                int newViews = contentViewList.Count;
-                            }
-                            */
-                            #endregion
+                            messagesSent = queueMessages.Count;
                         }
 
                         // Log last run temporal state
-                        var loggingResult = await Tasks.LogLastTemporalState.RunAsync(_preprocessorStorageContext, temporalState, recordsProcessed);
+                        var loggingResult = await Tasks.LogLastTemporalState.RunAsync(_preprocessorStorageContext, temporalState, recordsProcessed, messagesSent);
 
                         _logger.LogInformation($"Temporal state: {temporalState.TemporalStateId} processed.");
 
