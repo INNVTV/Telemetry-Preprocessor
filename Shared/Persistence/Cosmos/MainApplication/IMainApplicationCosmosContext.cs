@@ -3,9 +3,9 @@ using System;
 using System.Collections.Generic;
 using System.Text;
 
-namespace Worker.Models.Persistence.DocumentDatabase
+namespace Shared.Persistence.Cosmos.MainApplication
 {
-    public interface IDocumentContext
+    public interface IMainApplicationCosmosContext
     {
         CosmosClient Client { get; set; }
         Database Database { get; set; }

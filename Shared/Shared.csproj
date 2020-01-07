@@ -11,10 +11,8 @@
   </ItemGroup>
 
   <ItemGroup>
-    <Folder Include="Persistence\Cosmos\" />
     <Folder Include="Persistence\SQL\" />
     <Folder Include="Persistence\Redis\" />
-    <Folder Include="Persistence\Storage\DataLakeStorage\" />
   </ItemGroup>
 
 </Project>

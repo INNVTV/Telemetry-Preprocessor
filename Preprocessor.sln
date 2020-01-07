@@ -3,19 +3,17 @@ Microsoft Visual Studio Solution File, Format Version 12.00
 # Visual Studio Version 16
 VisualStudioVersion = 16.0.29613.14
 MinimumVisualStudioVersion = 10.0.40219.1
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Worker", "Worker\Worker.csproj", "{935C5184-E337-4BB1-B6EC-069E44C85220}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "MainWorker", "MainWorker\MainWorker.csproj", "{4594124F-83CB-4C2B-AA72-530D1E99D803}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "MainWorker", "MainWorker\MainWorker.csproj", "{4594124F-83CB-4C2B-AA72-530D1E99D803}"
-EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Shared", "Shared\Shared.csproj", "{F36E6DAF-0BE8-4E00-8682-1B0CCD8EEB68}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Shared", "Shared\Shared.csproj", "{F36E6DAF-0BE8-4E00-8682-1B0CCD8EEB68}"
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "TaskWorkers", "TaskWorkers", "{8968F148-937D-4004-B458-9DCA2B0A9B04}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "UpdateMainRecordTask", "TaskWorkers\UpdateMainRecordTask\UpdateMainRecordTask.csproj", "{F0B66457-E689-4AB2-9CE1-F2550D8951C8}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "UpdateMainRecordTask", "TaskWorkers\UpdateMainRecordTask\UpdateMainRecordTask.csproj", "{F0B66457-E689-4AB2-9CE1-F2550D8951C8}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "UpdateDataLakeTask", "TaskWorkers\UpdateDataLakeTask\UpdateDataLakeTask.csproj", "{DD6B4A75-49A8-420A-A8AB-5DDF6CE5BE99}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "UpdateDataLakeTask", "TaskWorkers\UpdateDataLakeTask\UpdateDataLakeTask.csproj", "{DD6B4A75-49A8-420A-A8AB-5DDF6CE5BE99}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "UpdateViewCountTableTask", "TaskWorkers\UpdateViewCountTableTask\UpdateViewCountTableTask.csproj", "{92B50D42-A249-4F18-9946-1B18507096A5}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "UpdateViewCountTableTask", "TaskWorkers\UpdateViewCountTableTask\UpdateViewCountTableTask.csproj", "{92B50D42-A249-4F18-9946-1B18507096A5}"
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "UpdateViewReportsTableTask", "TaskWorkers\UpdateViewReportsTableTask\UpdateViewReportsTableTask.csproj", "{A3408971-F552-404B-9FD0-3FE90D27CAFC}"
 EndProject
@@ -25,10 +23,6 @@ Global
 		Release|Any CPU = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(ProjectConfigurationPlatforms) = postSolution
-		{935C5184-E337-4BB1-B6EC-069E44C85220}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{935C5184-E337-4BB1-B6EC-069E44C85220}.Debug|Any CPU.Build.0 = Debug|Any CPU
-		{935C5184-E337-4BB1-B6EC-069E44C85220}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{935C5184-E337-4BB1-B6EC-069E44C85220}.Release|Any CPU.Build.0 = Release|Any CPU
 		{4594124F-83CB-4C2B-AA72-530D1E99D803}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
 		{4594124F-83CB-4C2B-AA72-530D1E99D803}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{4594124F-83CB-4C2B-AA72-530D1E99D803}.Release|Any CPU.ActiveCfg = Release|Any CPU

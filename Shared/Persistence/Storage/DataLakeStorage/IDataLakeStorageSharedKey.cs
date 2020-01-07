@@ -3,7 +3,7 @@ using System;
 using System.Collections.Generic;
 using System.Text;
 
-namespace Worker.Models.Persistence
+namespace Shared.Persistence.Storage.DataLake
 {
     public interface IDataLakeStorageSharedKey
     {

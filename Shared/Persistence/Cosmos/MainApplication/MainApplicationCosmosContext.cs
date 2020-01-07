@@ -4,39 +4,34 @@ using System.Text;
 using Microsoft.Azure.Cosmos;
 using Microsoft.Extensions.Configuration;
 
-namespace Worker.Models.Persistence.DocumentDatabase
+namespace Shared.Persistence.Cosmos.MainApplication
 {
-    public class DocumentContext : IDocumentContext
+    public class MainApplicationCosmosContext : IMainApplicationCosmosContext
     {
-        public DocumentContext(IConfiguration configuration)
+        public MainApplicationCosmosContext(IConfiguration configuration)
         {
             Settings = new Settings();
 
             #region Map appsettings.json
 
             Settings.Url = configuration
-                .GetSection("Azure")
-                .GetSection("CosmosDb")
+                .GetSection("ApplicationCosmosDb")
                 .GetSection("Url").Value;
 
             Settings.Key = configuration
-                .GetSection("Azure")
-                .GetSection("CosmosDb")
+                .GetSection("ApplicationCosmosDb")
                 .GetSection("Key").Value;
 
             Settings.ReadOnlyKey = configuration
-                .GetSection("Azure")
-                .GetSection("CosmosDb")
+                .GetSection("ApplicationCosmosDb")
                 .GetSection("ReadOnlyKey").Value;
 
             Settings.Database = configuration
-                .GetSection("Azure")
-                .GetSection("CosmosDb")
+                .GetSection("ApplicationCosmosDb")
                 .GetSection("Database").Value;
 
             Settings.Collection = configuration
-                .GetSection("Azure")
-                .GetSection("CosmosDb")
+                .GetSection("ApplicationCosmosDb")
                 .GetSection("Collection").Value;
             #endregion
 
