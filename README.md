@@ -49,6 +49,17 @@ Having the raw telemetry data stored as blocks of time will allow for new prepro
 
 ![EventSourcing](https://github.com/INNVTV/Telemetry-Preprocessor/blob/master/_docs/images/event-sourcing.png)
 
+# Storage Accounts
+![StorageAccounts](https://github.com/INNVTV/Telemetry-Preprocessor/blob/master/_docs/images/storage-accounts.png)
+The example scenario spans accross 4 seperate storage accounts.
+* **Telemetry Storage** Stores raw telemetry data in temporal formats
+* **Preprocessor Storage** Used to log preprocessor states and pass messages via storage queues
+* **Application Storage** Stores data in a format available to the main application without additionl processing requirements
+* **Data Lake Storage** Stores cleaned and merged data ready for data analysis and data science.
+
+# Message Queues
+The example scenario uses basic storage queues with polling using an exponential back-off pattern. This can be easily updated to use Service Bus for long polling or serverless triggers and webhooks within Azure Functions.
+
 # Production Pipelines
 Scalable production scenarios should break telemetry up based on logical entities in order to better manage, isolate and update telemetry scenarios. Each temporal log can then have many preprocessors each focused on one dimension per entity. For example sentiment on content or recommendations for users based on interaction data.
 
