@@ -14,6 +14,6 @@ namespace Shared.Constants
 
         // Application Storage
         public readonly static string ContentViewCounts = "contentviewcounts";
-        public readonly static string ContentViewHourlyReports = "contentviewhourlyreports";
+        public readonly static string ContentViewHourlyReports = "contentviewreportsbyhour";
     }
 }

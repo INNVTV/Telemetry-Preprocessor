@@ -13,7 +13,7 @@ namespace MainWorker.Models.TableEntities
             set { PartitionKey = value; }
         }
 
-        public string ReportHour
+        public string Hour
         {
             get { return RowKey; }
             set { RowKey = value; }

@@ -34,7 +34,7 @@ namespace UpdateViewReportsTableTask.Tasks
                 // This is the first view count coming in for this content item. Create a record and load initial views.
                 viewReportRecord = new ViewReport();
                 viewReportRecord.ContentId = message.ContentId;
-                viewReportRecord.ReportHour = message.Hour;
+                viewReportRecord.Hour = message.Hour;
                 viewReportRecord.ViewCount = message.Views;
 
                 TableOperation insert = TableOperation.Insert(viewReportRecord);
