@@ -34,7 +34,7 @@ namespace UpdateViewCountTableTask.Tasks
                 viewCountRecord = new ViewCount();
                 viewCountRecord.AccountId = message.AccountId;
                 viewCountRecord.ContentId = message.ContentId;
-                viewCountRecord.ViewCount = message.Views;
+                viewCountRecord.Views = message.Views;
 
                 TableOperation insert = TableOperation.Insert(viewCountRecord);
                 var insertResult = await table.ExecuteAsync(insert);
@@ -42,7 +42,7 @@ namespace UpdateViewCountTableTask.Tasks
             else
             {
                 // Append to previous view count
-                viewCountRecord.ViewCount = viewCountRecord.ViewCount + message.Views;
+                viewCountRecord.Views = viewCountRecord.Views + message.Views;
 
                 TableOperation update = TableOperation.Replace(viewCountRecord);
                 var updateResult = await table.ExecuteAsync(update);

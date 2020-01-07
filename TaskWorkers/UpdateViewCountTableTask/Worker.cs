@@ -42,6 +42,7 @@ namespace UpdateViewCountTableTask
             var queueName = Shared.Constants.QueueNames.ViewCountTableTask;
 
             QueueClient queue = new QueueClient(connectionString, queueName);
+            queue.Create();
 
             while (!stoppingToken.IsCancellationRequested)
             {
@@ -50,29 +51,40 @@ namespace UpdateViewCountTableTask
 
                 ContentViewsQueueMessage message = null;
 
-                try
+                if(rawMessage != null)
                 {
-                    message = new ContentViewsQueueMessage(rawMessage.MessageText);
-                }
-                catch
-                {
-                    // Message data is corrupt. Deque, log issue and skip.
-                    await queue.DeleteMessageAsync(rawMessage.MessageId, rawMessage.PopReceipt);
+                    #region Attempt to parse raw message
+
+                    try
+                    {
+                        message = new ContentViewsQueueMessage(rawMessage.MessageText);
+                    }
+                    catch
+                    {
+                        // Message data is corrupt. Deque, log issue and skip.
+                        await queue.DeleteMessageAsync(rawMessage.MessageId, rawMessage.PopReceipt);
+                    }
+
+                    #endregion
                 }
 
                 if (message != null)
                 {
+                    _logger.LogInformation($"Processing message: {rawMessage.MessageText}");
+
                     // Run Task(s)
                     var result = await Tasks.UpdateViewCountsTable.RunAsync(_applicationStorageContext, message);
 
                     // Delete message and reset interval
                     await queue.DeleteMessageAsync(rawMessage.MessageId, rawMessage.PopReceipt);
+                    _logger.LogInformation($"Message processed and dequeued");
+
                     interval = minInterval;
-                    _logger.LogInformation($"Interval reset to {interval}");
+                    _logger.LogInformation($"Interval reset to {interval}. Checking queue for new messages...");
                 }
                 else
                 {
-                    _logger.LogInformation($"Sleep for {interval} seconds");
+                    _logger.LogInformation($"Queue empty. Sleeping for {interval} seconds");
                     await Task.Delay((interval * 1000), stoppingToken);
 
                     interval = Math.Min(maxInterval, interval * exponent);

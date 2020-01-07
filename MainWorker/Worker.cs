@@ -71,8 +71,8 @@ namespace MainWorker
                         _logger.LogInformation($"Temporal state: {temporalState.TemporalStateId} processed {recordsProcessed} records, sent {messagesSent} messages.");
 
                         // Sleep for 1 second
-                        _logger.LogInformation("Main worker sleeping for 1 second.");
-                        await Task.Delay(1000, stoppingToken);
+                        _logger.LogInformation("Main worker sleeping for 10 milliseconds.");
+                        await Task.Delay(10, stoppingToken);
 
                     }
                     else

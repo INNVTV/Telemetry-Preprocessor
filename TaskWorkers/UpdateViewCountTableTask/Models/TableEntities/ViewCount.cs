@@ -19,7 +19,7 @@ namespace MainWorker.Models.TableEntities
             set { RowKey = value; }
         }
 
-        public int ViewCount { get; set; }
+        public int Views { get; set; }
 
     }
 }
