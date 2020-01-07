@@ -32,6 +32,7 @@ namespace UpdateViewCountTableTask.Tasks
             {
                 // This is the first view count coming in for this content item. Create a record and load initial views.
                 viewCountRecord = new ViewCount();
+                viewCountRecord.Name = message.Name;
                 viewCountRecord.AccountId = message.AccountId;
                 viewCountRecord.ContentId = message.ContentId;
                 viewCountRecord.Views = message.Views;

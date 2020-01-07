@@ -7,22 +7,26 @@ namespace Shared.Models.QueueMessages
 {
     public class ContentViewsQueueMessage
     {
+        private string deliminator = "^^^^";
+
         public ContentViewsQueueMessage(string queueMessageString)
         {
-            var stringArray = queueMessageString.Split(",");
+            var stringArray = queueMessageString.Split(deliminator);
 
-            AccountId = stringArray[0];
-            ContentId = stringArray[1];
-            Views = Convert.ToInt32(stringArray[2]);
-            Year = stringArray[3];
-            Month = stringArray[4];
-            Day = stringArray[5];
-            Hour = stringArray[6];
-            Minute = stringArray[7];           
+            Name = stringArray[0];
+            AccountId = stringArray[1];
+            ContentId = stringArray[2];
+            Views = Convert.ToInt32(stringArray[3]);
+            Year = stringArray[4];
+            Month = stringArray[5];
+            Day = stringArray[6];
+            Hour = stringArray[7];
+            Minute = stringArray[8];           
         }
 
-        public ContentViewsQueueMessage(string accountId, string contentId, int views, string year, string month, string day, string hour, string minute)
+        public ContentViewsQueueMessage(string name, string accountId, string contentId, int views, string year, string month, string day, string hour, string minute)
         {
+            Name = name;
             AccountId = accountId;
             ContentId = contentId;
             Views = views;
@@ -33,6 +37,7 @@ namespace Shared.Models.QueueMessages
             Minute = minute;
         }
 
+        public string Name { get; set; }
         public string AccountId { get; set; }
         public string ContentId { get; set; }
         public int Views { get; set; }
@@ -44,7 +49,16 @@ namespace Shared.Models.QueueMessages
 
         public string ToQueueMessageString()
         {
-            return $"{AccountId},{ContentId},{Views},{Year},{Month},{Day},{Hour},{Minute}";
+            return
+                $"{Name}{deliminator}" +
+                $"{AccountId}{deliminator}" +
+                $"{ContentId}{deliminator}" +
+                $"{Views}{deliminator}" +
+                $"{Year}{deliminator}" +
+                $"{Month}{deliminator}" +
+                $"{Day}{deliminator}" +
+                $"{Hour}{deliminator}" +
+                $"{Minute}";
         }
 
     }

@@ -7,6 +7,7 @@ using Microsoft.Extensions.Hosting;
 using Microsoft.Extensions.Logging;
 using Shared.Models;
 using Shared.Models.QueueMessages;
+using Shared.Persistence.Cosmos.MainApplication;
 using Shared.Persistence.Storage.Preprocessor;
 using Shared.Persistence.Storage.Telemetry;
 
@@ -17,12 +18,14 @@ namespace MainWorker
         private readonly ILogger<Worker> _logger;
         private readonly ITelemetryStorageContext _telemetryStorageContext;
         private readonly IPreprocessorStorageContext _preprocessorStorageContext;
+        private readonly IMainApplicationCosmosContext _mainApplicationCosmosContext;
 
-        public Worker(ILogger<Worker> logger, ITelemetryStorageContext telemetryStorageContext, IPreprocessorStorageContext preprocessorStorageContext)
+        public Worker(ILogger<Worker> logger, ITelemetryStorageContext telemetryStorageContext, IPreprocessorStorageContext preprocessorStorageContext, IMainApplicationCosmosContext mainApplicationCosmosContext)
         {
             _logger = logger;
             _telemetryStorageContext = telemetryStorageContext;
             _preprocessorStorageContext = preprocessorStorageContext;
+            _mainApplicationCosmosContext = mainApplicationCosmosContext;
         }
 
         protected override async Task ExecuteAsync(CancellationToken stoppingToken)
@@ -57,6 +60,14 @@ namespace MainWorker
                             // Process telemetry (merge data, convert to queue messages for task workers)
                             var queueMessages = await Tasks.ProcessTelemetry.RunAsync(telemetryData, temporalState);
 
+                            // Verify, Clean, Extract (Check validity of contentId(s) and extract content name from main cosmos record)
+                            int preVerificationRecords = queueMessages.Count;
+                            queueMessages = await Tasks.VerifyCleanExtract.RunAsync(_mainApplicationCosmosContext, queueMessages);
+                            if(preVerificationRecords > queueMessages.Count)
+                            {
+                                _logger.LogInformation($"Removed {preVerificationRecords - queueMessages.Count} content object(s) that could not be verified.");
+                            }
+
                             // Send messages to task workers
                             var messageQueueResponse = await Tasks.SendQueueMessages.RunAsync(_preprocessorStorageContext, queueMessages);
 
@@ -68,7 +79,7 @@ namespace MainWorker
                         // Log last run temporal state
                         var loggingResult = await Tasks.LogLastTemporalState.RunAsync(_preprocessorStorageContext, temporalState, recordsProcessed, messagesSent);
 
-                        _logger.LogInformation($"Temporal state: {temporalState.TemporalStateId} processed {recordsProcessed} records, sent {messagesSent} messages.");
+                        _logger.LogInformation($"Temporal state: {temporalState.TemporalStateId} processed {recordsProcessed} record(s), sent {messagesSent} message(s).");
 
                         // Sleep for 1 second
                         _logger.LogInformation("Main worker sleeping for 10 milliseconds.");

@@ -5,6 +5,7 @@ using System.Threading.Tasks;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
+using Shared.Persistence.Cosmos.MainApplication;
 using Shared.Persistence.Storage.Preprocessor;
 using Shared.Persistence.Storage.Telemetry;
 
@@ -28,10 +29,12 @@ namespace MainWorker
                     // Create Persistence models
                     ITelemetryStorageContext telemetryStorageContext = new TelemetryStorageContext(configuration);
                     IPreprocessorStorageContext preprocessorStorageContext = new PreprocessorStorageContext(configuration);
+                    IMainApplicationCosmosContext mainApplicationCosmosContext = new MainApplicationCosmosContext(configuration);
 
                     services.AddSingleton(settings);
                     services.AddSingleton(telemetryStorageContext);
                     services.AddSingleton(preprocessorStorageContext);
+                    services.AddSingleton(mainApplicationCosmosContext);
 
                     services.AddHostedService<Worker>();
                 });

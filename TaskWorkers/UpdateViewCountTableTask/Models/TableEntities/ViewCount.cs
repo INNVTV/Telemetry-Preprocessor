@@ -19,6 +19,7 @@ namespace MainWorker.Models.TableEntities
             set { RowKey = value; }
         }
 
+        public string Name { get; set; }
         public int Views { get; set; }
 
     }

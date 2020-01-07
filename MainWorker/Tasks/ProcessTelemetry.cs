@@ -34,6 +34,7 @@ namespace MainWorker.Tasks
 
                 // Generate a new message and add it to the list to be sent to task workers
                 queueMessages.Add(new ContentViewsQueueMessage(
+                    "", //<-- Content name to be extracted in anothe task
                     accountId,
                     contentId,
                     newViews,
