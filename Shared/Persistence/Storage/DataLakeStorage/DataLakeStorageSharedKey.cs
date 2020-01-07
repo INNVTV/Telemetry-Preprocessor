@@ -16,12 +16,10 @@ namespace Shared.Persistence.Storage.DataLake
             #region Map appsettings.json
 
             Settings.Name = configuration
-                .GetSection("Azure")
                 .GetSection("DataLakeStorage")
                 .GetSection("Name").Value;
 
             Settings.Key = configuration
-                .GetSection("Azure")
                 .GetSection("DataLakeStorage")
                 .GetSection("Key").Value;
 
