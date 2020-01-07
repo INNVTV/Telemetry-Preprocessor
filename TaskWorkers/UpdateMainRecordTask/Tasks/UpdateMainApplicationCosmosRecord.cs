@@ -1,6 +1,4 @@
-﻿using Azure.Storage.Files.DataLake;
-using Microsoft.Azure.Cosmos.Table;
-using Shared.Models.QueueMessages;
+﻿using Shared.Models.QueueMessages;
 using Shared.Persistence.Cosmos.MainApplication;
 using System.Threading.Tasks;
 

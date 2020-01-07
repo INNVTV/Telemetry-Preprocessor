@@ -26,7 +26,7 @@ namespace MainWorker.Tasks
             countTableTask.Create();
 
             // Task Worker 3
-            QueueClient reportsTableTask = new QueueClient(connectionString, Shared.Constants.QueueNames.ReportsTableTask);
+            QueueClient reportsTableTask = new QueueClient(connectionString, Shared.Constants.QueueNames.ViewReportsTableTask);
             reportsTableTask.Create();
 
             // Task Worker 4
