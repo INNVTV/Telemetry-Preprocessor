@@ -18,7 +18,7 @@ namespace Shared.Constants
     {
         public readonly static string MainRecordTask = "content-views-update-main-record";
         public readonly static string DataLakeTask = "content-views-update-data-lake";
-        public readonly static string CountTableTask = "content-views-update-count-table";
+        public readonly static string ViewCountTableTask = "content-views-update-count-table";
         public readonly static string ReportsTableTask = "content-views-update-report-table";
     }
 }

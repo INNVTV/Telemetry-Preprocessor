@@ -22,7 +22,7 @@ namespace MainWorker.Tasks
             mainRecordTask.Create();
 
             // Task Worker 2
-            QueueClient countTableTask = new QueueClient(connectionString, Shared.Constants.QueueNames.CountTableTask);
+            QueueClient countTableTask = new QueueClient(connectionString, Shared.Constants.QueueNames.ViewCountTableTask);
             countTableTask.Create();
 
             // Task Worker 3
