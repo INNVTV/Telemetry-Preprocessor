@@ -20,7 +20,7 @@ Since you will not need to handle external traffic consider handling your data p
 * Send results to cloud storage, data lakes & databases. 
 
 ### Task Scheduler vs Windows Service
-Building as a console application or worker service and simply setting up a scheduled task using Task Scheduler to run the EXE on startup is a good bare bones solution. Windows Services are another option but comes with many additional requirements for development and debugging. They can also be challenging to manage when running important tasks in production.
+Building as a console application rather than a worker service and simply setting up a scheduled task using Task Scheduler to run the EXE on startup is a good bare bones solution. Windows Services comes with many additional requirements for development and debugging. They can also be challenging to manage when running important tasks in production.
 
 John Galloway goes over many of these details in this post: https://weblogs.asp.net/jongalloway//428303
 
@@ -33,6 +33,8 @@ John Galloway goes over many of these details in this post: https://weblogs.asp.
 * Scheduled console applications are easier to run in an ad hoc manner when necessary.
 * Running separate Windows Services with their own timers is just plain inefficient with server resources.
 * If I kept writing Windows Services with timers, eventually I'd start to think about writing a single host system with a timer. Then I'd want to add in some more advanced scheduling features; perhaps even some logging. Eventually, I'd have a Windows Service that handles scheduling of child processes, and if I devoted years to enhancements and testing, I'd eventually arrive at... the Windows Task Scheduler.
+
+Since this project is written as a Worker Service you will need to migrate to a Console Application to take advantage of Scheduled Tasks.
 
 # Managed services lock-in
 This is really a replacement for the data factory pattern that Azure Data Factory and similar services provide. Again these services are costly both in budget and time. They will often present limitations when you are too far down the road to back track and will often require future updates and migrations to stay up to date. **I cannot stress the importance of staying out of this cloud computing trap!** You should only consider them for high performance, high tim epreference workloads such as Real-Time Stream Analytics.
